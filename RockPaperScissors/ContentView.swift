@@ -16,6 +16,7 @@ struct ContentView: View {
     private enum ActiveAlert {
         case game, round
     }
+    @State private var cheatMode = true
     //store image names
     @State private var gameChoices = ["hexagon", "doc", "scissors"]
     //store names user sees
@@ -44,9 +45,9 @@ struct ContentView: View {
         //nav view for sexy title
         NavigationView {
             //stacking Vstacks cuz it looks nice
-            VStack(spacing: 30) {
+            VStack(spacing: 20) {
                 //first one stores the stuff for picking goal
-                VStack(spacing: 30) {
+                VStack(spacing: 20) {
                     Text("")
                     //makes title
                     Text("How do you want to play?").font(.title)
@@ -58,9 +59,12 @@ struct ContentView: View {
                         }
                         //segmented style so it doesnt look bad
                     }.pickerStyle(SegmentedPickerStyle())
+                    Toggle("cheeto", isOn: $cheatMode).frame(width: 200, height: 50, alignment: .top)
                 }
+                
+
                 //second one stores choices
-                VStack (spacing: 30) {
+                VStack (spacing: 20) {
                     //for each possible choice
                     ForEach (0 ..< gameChoices.count) { number in
                         //if you click the thing
@@ -74,7 +78,7 @@ struct ContentView: View {
                             HStack (spacing: 50) {
                                 //title - made it light up for debugging purposes
                                 //delete.foregroundcolor stuff if you want it to not tell the user what the computer chose
-                                Text("\(gameChoiceNames[number])").font(.title).foregroundColor(number == computerChoice ? Color.green:Color.red)
+                                Text("\(gameChoiceNames[number])").font(.title).foregroundColor(number == computerChoice && cheatMode ? Color.green:Color.primary)
                                 //images: this is why we have the different named choices lol cuz i was too lazy to find pictures
                                 Image(systemName: "\(gameChoices[number])").renderingMode(.original).resizable().frame(width: 50, height: 50, alignment: .center)
                             }
@@ -86,9 +90,11 @@ struct ContentView: View {
                     Text("")
                     Text("User Score is \(userScore)").font(.title)
                     Text("You have \(roundsToGo) rounds left to go!").font(.title2)
+                    
                 }
                 //spacer to fill screen
                 Spacer()
+
                 //title
             }.navigationBarTitle(Text("Rock, Paper, Scissors"))
         //alerts! they pop up when we say to (showAlert)
